@@ -46,3 +46,8 @@ Dashboard rollere göre farklı olacak
 
 https://chatgpt.com/share/68814325-8f8c-8012-ad7f-7f9dcbc56f56
 
+
+CI/CD
+
+https://chatgpt.com/share/68837bca-1cf8-8012-a2d4-f430794fa9ad
+
