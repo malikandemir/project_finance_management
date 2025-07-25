@@ -1,6 +1,3 @@
-Harika bir başlangıç! Elinizdeki yapı, bir proje ve görev yönetimi uygulamasının temelini çok net bir şekilde özetliyor. Bu yapıyı kullanıcı dostu bir web arayüzüne dönüştürmek için aşağıdaki tasarım önerilerini ve akışları değerlendirebilirsiniz.
-
-Tasarımı, modern, temiz ve rol odaklı bir yaklaşımla ele alalım.
 
 ---
 
