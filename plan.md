@@ -138,5 +138,11 @@ Bu tablo, primin nereden ve nasıl geldiğini net bir şekilde açıklar.
 * "Taleplerim" sayfası.
 * Filtreleme seçenekleri: [Tümü, Gecikenler, Bu Hafta Bitecekler, Tamamlananlar]
 * Geciken taleplerin satırları belirgin bir şekilde (örn: açık kırmızı arka plan) renklendirilir.
+* 
+
+**Loglama:**
+* Tüm yapılan işlemler loglanmalı
+* Örneğin taleplerin, projelerin veya ödemelerin listelendiği sayfada bir talebin hangi tarihte kim tarafından hangi alanın güncellendiğin gösteren bir log sayfasını pop up şeklinde açan ve en son işlem üstte olacak şekilde listeleyen bir yapı olmalı
+
 
 Bu tasarım önerileri, sağladığınız teknik yapıyı son kullanıcı için anlaşılır, verimli ve görsel olarak tatmin edici bir deneyime dönüştürmeyi hedefler.
