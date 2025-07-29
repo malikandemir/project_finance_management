@@ -1,0 +1,254 @@
+Number,Turkish,English
+100,Kasa,Cash
+101,Alınan Çekler,Cheques Received
+102,Bankalar,Banks
+103,Verilen Çek ve Ödeme Emirleri (-),Cheques Given and Payment Orders(-)
+108,Diğer Hazır Değerler,Other Liquid Assets
+110,Hisse Senetleri,Common Stocks
+111,Özel Kesim Tahvil Senet Bonoları,Private Sector Bonds Notes and Shares
+112,Kamu Kesim Tahvil Senet Bonoları,Public Sector Bonds Notes And Shares
+118,Diğer Menkul Kıymetler,Other Marketable Securities
+119,Menkul Kıymet Değer Düşüklüğü Karşılığı (-),Provision for Decrease in Value of Marketable Sec.(-)
+120,Alıcılar,Customers
+121,Alacak Senetleri,Notes Receivable
+122,Alacak Senetleri Reeskontu (-),Rediscount of Notes Receivables (-)
+124,Kazanılmamış Finansal Kiralama Faiz Gelirleri (-),Unearned Lease Interest Income (-)
+126,Verilen Depozito ve Teminatlar,Deposits and Guarantees Given
+127,Diğer Ticari Alacaklar,Other Trade Receivables
+128,Şüpheli Ticari Alacaklar,Doubtful Trade Receivables
+129,Şüpheli Ticari Alacak Karşılığı (-),Provisions for Doubtful Trade Receivables (-)
+131,Ortaklardan Alacaklar,Due from Shareholders
+132,İştiraklerden Alacaklar,Due from Participations
+133,Bağlı Ortaklıklardan Alacaklar,Due from Subsidiaries
+135,Personelden Alacaklar,Due from Personnel
+136,Diğer Çeşitli Alacaklar,Other Receivables
+137,Diğer Alacak Senetleri Reeskontu (-),Discounts on Other Notes Receivables(-)
+138,Şüpheli Diğer Alacaklar,Other Doubtful Receivables
+139,Şüpheli Diğer Alacaklar Karşılığı (-),Provision for Other Doubtful Receivables(-)
+150,İlk Madde ve Malzeme,Raw Materials and Supplies
+151,Yarı Mamuller,Semi-finished Goods in Production
+152,Mamuller,Finished Goods
+153,Ticari Mallar,Trade Goods
+157,Diğer Stoklar,Other Inventories
+158,Stok Değer Düşüklüğü Karşılığı (-),Provision for Inventories (-)
+159,Verilen Sipariş Avansları,Advances Given to Suppliers
+170,Yıllara Yaygın İnşaat ve Onarım Maliyetleri,Contract Progress Costs
+178,Yıllara Yaygın İnşaat Enflasyon Düzeltme Hesabı,Inflation Adjustments on Contract Progress
+179,Taşeronlara Verilen Avanslar,Advances Given to Sub-Contractors
+180,Gelecek Aylara Ait Giderler,Prepaid Expense for The Following Months
+181,Gelir Tahakkukları,Income Accruals
+190,Devreden KDV,Deferred VAT
+191,İndirilecek KDV,Deductible VAT
+192,Diğer KDV,Other VAT
+193,Peşin Ödenen Vergi ve Fonlar,Prepaid Taxes and Funds
+195,İş Avansları,Work Advance
+196,Personel Avansları,Advance Given To Personnel
+197,Sayım Tesellüm Noksanları,Stock Count and Delivery Shortages
+198,Diğer Çeşitli Dönen Varlıklar,Other Current Assets
+199,Diğer Dönen Varlıklar Karşılığı (-),Provision for Other Current Assets (-)
+220,Alıcılar,Customers
+221,Alacak Senetleri,Notes Receivable
+222,Alacak Senetleri Reeskontu (-),Rediscount on Notes Receivables (-)
+224,Kazanılmamış Finansal Kiralama Faiz Gelirleri (-),Unearned Lease Interest Income (-)
+226,Verilen Depozito ve Teminatlar,Deposits and Guarantees Given
+229,Şüpheli Alacaklar Karşılığı (-),Provison for Doubtful Receivables
+231,Ortaklardan Alacaklar,Due from Shareholders
+232,İştiraklerden Alacaklar,Due from Participations
+233,Bağlı Ortaklıklardan Alacaklar,Due from Subsidiaries
+235,Personelden Alacaklar,Receivables From Personnel
+236,Diğer Çeşitli Alacaklar,Other Receivables
+237,Diğer Alacak Senetleri Reeskontu (-),Rediscount on Other Notes Receivable (-)
+239,Şüpheli Diğer Alacaklar Karşılığı (-),Provision for Other Doubtful Receivables(-)
+240,Bağlı Menkul Kıymetler,Long Term Securities
+241,Bağlı Menkul Kıymetler Değer Düşüklüğü Karşılığı (-),Decrease in Value of Long Term Marketable Securities (-)
+242,İştirakler,Participations
+243,İştiraklere Sermaye Taahhütleri (-),Capital Commitments for Participations (-)
+244,İştirakler Sermaye Payları Değer Düşüklüğü Karşılığı (-),Decrease in Value of Participations' Shares (-)
+245,Bağlı Ortaklıklar,Subsidiaries
+246,Bağlı Ortaklık Sermaye Taahhütleri (-),Capital Commitments for Subsidiaries (-)
+247,Bağlı Ortaklıklar Sermaye Payları Değer Düşüklüğü Krş. (-),Decrease in Value of Subsidiaries Shares (-)
+248,Diğer Mali Duran Varlıklar,Other Financial Assets
+249,Diğer Mali Duran Varlıklar Değer Düşüklüğü Krş. (-),Decrease in Value of Other Financial Assets (-)
+250,Arazi ve Arsalar,Land
+251,Yeraltı ve Yerüstü Düzenleri,Land Improvements
+252,Binalar,Buildings
+253,Tesis Makina ve Cihazlar,Machinery Equipment and Installations
+254,Taşıtlar,Motor Vehicles
+255,Demirbaşlar,Furniture and Fixtures
+256,Diğer Maddi Duran Varlıklar,Other Tangible Fix Assets
+257,Birikmiş Amortismanlar (-),Accumulated Depreciation(-)
+258,Yapılmakta Olan Yatırımlar,Construction in Progress
+259,Verilen Avanslar,Fix Assets Advances Given
+260,Haklar,Rights
+261,Şerefiyeler,Goodwill
+262,Kuruluş ve Örgütlenme Giderleri,Pre-operating Expenses
+263,Araştırma ve Geliştirme Giderleri,Research and Development Expenses
+264,Özel Maliyetler,Special Cost
+267,Diğer Maddi Olmayan Duran Varlıklar,Other Intangible Fixed Assets
+268,Birikmiş Amortismanlar (-),Accumulated Amortization(-)
+269,Verilen Avanslar,Advances Given to Suppliers
+271,Arama Giderleri,Research Expenses
+272,Hazırlık ve Geliştirme Giderleri,Preperation and Development Expenses
+277,Diğer Özel Tükenmeye Tabi Varlıklar,Other Depletable Assets
+278,Birikmiş Tükenme Payları (-),Accumulated Depletion (-)
+279,Verilen Av Nathalie,
+280,Gelecek Yıllara Ait Giderler,Prepaid Expenses for the Following Years
+281,Gelir Tahakkukları,Income Accruals
+291,Gelecek Yıllarda İndirilecek KDV,VAT Deductible for the Following Years
+292,Diğer KDV,Other VAT
+293,Gelecek Yıllar İhtiyacı Stoklar,Long Term Stocks
+294,Elden Çıkarılacak Stoklar ve Maddi Duran Varlıklar,Inventories and Tangible Fixed Assets to be Sold
+295,Peşin Ödenen Vergiler ve Fonlar,Prepaid Expenses and Funds
+297,Diğer Çeşitli Duran Varlıklar,Other Fixed Assets
+298,Stok Değer Düşüklüğü Karşılığı (-),Decrease in Value of Stocks (-)
+299,Birikmiş Amortismanlar (-),Accumulated Depreciation (-)
+300,Banka Kredileri,Bank Loans
+301,Finansal Kiralama İşlemlerinden Borçlar,Leasing Payables
+302,Ertelenmiş Finansal Kiralama Borçlanma Maliyetleri (-),Interest Payables of Deferred Lease Costs (-)
+303,Uzun Vadeli Kredilerin Ana Para Taksitleri ve Faizleri,Current Maturities of Long Term Credits and Accrued Interest
+304,Tahvil Anapara Borç Taksit Faizi,Current Maturities of Bonds and Accrued Interest
+305,Çıkarılmış Bonolar ve Senetler,Bonds and Notes Issued
+306,Çıkarılmış Diğer Menkul Kıymetler,Other Securities Issued
+308,Menkul Kıymetler İhraç Farkı (-),Value Difference of Securities Issued (-)
+309,Diğer Mali Borçlar,Other Financial Liabilities
+320,Satıcılar,Suppliers
+321,Borç Senetleri,Notes Payable
+322,Borç Senetleri Reeskontu (-),Rediscount on Notes Payables (-)
+326,Alınan Depozito ve Teminatlar,Deposits and Guarantees Taken
+329,Diğer Ticari Borçlar,Other Trade Payables
+331,Ortaklara Borçlar,Due to Shareholders
+332,İştiraklere Borçlar,Due to Participations
+333,Bağlı Ortaklıklara Borçlar,Due to Subsidiaries
+335,Personele Borçlar,Due to Personnel
+336,Diğer Çeşitli Borçlar,Other Liabilities
+337,Diğer Borç Senetleri Reeskontu (-),Rediscount on Other Notes Payable (-)
+340,Alınan Sipariş Avansları,Advances Received
+349,Alınan Diğer Avanslar,Other Advances Received
+350,Yıllara Yaygın İnşaat ve Onarım Hakedişleri,Contract Progress Income
+358,Yıllara Yaygın İnşaat Enflasyon Düzeltme Hesabı,Inflation Adjustments on Contract Progress Income
+360,Ödenecek Vergi ve Fonlar,Taxes And Funds Payables
+361,Ödenecek Sosyal Güvenlik Kesintileri,Social Security Premiums Payable
+368,Vadesi Geçmiş Ertelenmiş veya Taks. Vergi ve Diğer Yük.,Overdue Deferred or Restructed Taxes and Other Libilities
+369,Ödenecek Diğer Yükümlülükler,Other Liabilities Payable
+370,Dönem Karı Vergi ve Diğer Yasal Yükümlülük Karşılığı,Prov. for Income Taxes and Oth.Legal Liabilities
+371,Dönem Karı Peşin Ödenen Vergi ve Diğer Yük. (-),Prepaid Taxes and Funds on Profit for the Period
+372,Kıdem Tazminatı Karşılığı,Provision for Employee Termination Benefits
+373,Maliyet Giderleri Karşılığı,Provision For Expenses Relating To Costing
+379,Diğer Borç ve Gider Karşılıkları,Provision for Other Liabilities and Expenses
+380,Gelecek Aylara Ait Gelirler,Short Term Deferred Income
+381,Gider Tahakkukları,Expense Accruals
+391,Hesaplanan KDV,VAT Calculated
+392,Diğer KDV,Other VAT
+393,Merkez ve Şubeler Cari Hesabı,Head Office and Branch Current Accounts
+397,Sayım ve Tesellüm Fazlaları,Stock Count Delivery Surpluses
+399,Diğer Çeşitli Yabancı Kaynaklar,Other Short Term Liabilities
+400,Banka Kredileri,Bank Loans
+401,Finansal Kiralama İşlemlerinden Borçlar,Leasing Payables
+402,Ertelenmiş Finansal Kiralama Borçlanma Maliyetleri (-),Deferred Lease Interest Payables (-)
+405,Çıkarılmış Tahviller,Bonds Issued
+407,Çıkarılmış Diğer Menkul Kıymetler,Other Marketable Securities Issued
+408,Menkul Kıymetler İhraç Farkı (-),Value Differences of Securities Inssued (-)
+409,Diğer Mali Borçlar,Other Financial Liabilities
+420,Satıcılar,Suppliers
+421,Borç Senetleri,Notes Payable
+422,Borç Senetleri Reeskontu (-),Rediscount on Notes Payable(-)
+426,Alınan Depozito ve Teminatlar,Deposits and Guarentees Taken
+429,Diğer Ticari Borçlar,Other Trade Payables
+431,Ortaklara Borçlar,Due to Shareholders
+432,İştiraklere Borçlar,Due to Participations
+433,Bağlı Ortaklıklara Borçlar,Due to Subsidiaries
+436,Diğer Çeşitli Borçlar,Other Payables
+437,Diğer Borç Senetleri Reeskontu (-),Rediscount on Notes Payable (-)
+438,Kamuya Olan Ertelenmiş veya Taksitlendirilmiş Borçlar,Deferred or Restructed Debts of Public Sector
+440,Alınan Sipariş Avansları,Advances Received
+449,Alınan Diğer Avanslar,Other Advances Received
+472,Kıdem Tazminatı Karşılıkları,Provisions for Employee Termination Benefits
+479,Diğer Borç ve Gider Karşılıkları,Provisions for Other Liabilities and Expenses
+480,Gelecek Yıllara Ait Gelirler,Long Term Deferred Income
+481,Gider Tahakkukları,Expense Accruals
+492,Gelecek Yıllara Ertelenen veya Terkin Edilecek KDV,Long Term Deferred or Postponed VAT
+493,Tesise Katılma Payları,Installation Participation
+499,Diğer Çeşitli Uzun Vadeli Yabancı Kaynaklar,Other Long Term Liabilities
+500,Sermaye,Share Capital
+501,Ödenmemiş Sermaye (-),Unpaid Share Capital(-)
+502,Sermaye Düzeltmesi Olumlu Farkları,Pozitive Distinction from Share Capital Adjustment
+503,Sermaye Düzeltmesi Olumsuz Farkları (-),Negative Distinction from Share Capital Adjustment (-)
+520,Hisse Senedi İhraç Primleri,Share Premium
+521,Hisse Senedi İptal Karları,Share Premium of Cancelled Shares
+522,M.D.V. Yeniden Değerleme Artışları,Revaluation Fund of Tangible Fixed Assets
+523,İştirakler Yeniden Değerleme Artışları,Revaluation Fund of Investments
+529,Diğer Sermaye Yedekleri,Other Share Capital Reserves
+540,Yasal Yedekler,Legal Reserves
+541,Statü Yedekleri,Special Reserves
+542,Olağanüstü Yedekler,Extraordinary Reserves
+548,Diğer Kar Yedekleri,Other Profit Reserves
+549,Özel Fonlar,Special Funds
+570,Geçmiş Yıllar Karları,Previous Year's Profits
+580,Geçmiş Yıllar Zararları,Previous Year's Losses
+590,Dönem Net Karı,Net Profit For The Period
+591,Dönem Net Zararı,Net Loss For The Period
+600,Yurtiçi Satışlar,Domestic Sales
+601,Yurtdışı Satışlar,Export Sales
+602,Diğer Gelirler,Other Sales
+610,Satış İadeleri (-),Sales Returns (-)
+611,Satış Iskontoları (-),Sales Discounts (-)
+612,Diğer İndirimler (-),Other Discounts (-)
+620,Satılan Mamuller Maliyeti (-),Cost of Goods Solds(Product) (-)
+621,Satılan Ticari Mallar Maliyeti (-),Cost of Trade Goods Sold (-)
+622,Satılan Hizmet Maliyeti (-),Cost of Services Sold (-)
+623,Diğer Satışların Maliyeti (-),Cost of Other Sales (-)
+630,Araştırma ve Geliştirme Giderleri (-),Research and Development Expenses (-)
+631,Pazarlama Satış ve Dağıtım Giderleri (-),Marketing Selling and Distribution Expenses (-)
+632,Genel Yönetim Giderleri (-),General Administrative Expenses (-)
+640,İştiraklerden Temettü Gelirleri,Dividend Income from Participations
+641,Bağlı Ortaklıklardan Temettü Geliri,Dividend Income from Subsidiaries
+642,Faiz Geliri,Interest Income
+643,Komisyon Gelirleri,Commission Income
+644,Konusu Kalmayan Karşılıklar,Provisions No Longer Required
+645,Menkul Kıymetler Satış Karları,Gains on Marketable Securities' Sales
+646,Kambiyo Karları,Foreign Exchange Gain
+647,Reeskont Faiz Gelirleri,Rediscount on Interest Gain
+648,Enflasyon Düzeltmesi Karları,Gains from Inflation Adjustments
+649,Faaliyetle İlgili Diğer Olağan Gelirler ve Karlar,Other Income and Profit from Operations
+653,Komisyon Giderleri (-),Commision Expenses (-)
+654,Karşılık Giderleri (-),Provision Expenses (-)
+655,Menkul Kıymet Satış Zararları (-),Losses on Marketable Securities' Sales(-)
+656,Kambiyo Zararları (-),Foreign Exchange Losses (-)
+657,Reeskont Faiz Giderleri (-),Interest Expenses on Discounted Notes (-)
+658,Enflasyon Düzeltmesi Zararları (-),Loss from Inflation Adjustments (-)
+659,Faaliyetle İlgili Diğer Olağan Gider ve Zararlar (-),Other Expenses and Losses (-)
+660,Kısa Vadeli Borçlanma Giderleri (-),Short-Term Borrowing Expenses (-)
+661,Uzun Vadeli Borçlanma Giderleri (-),Long-Term Borrowing Expenses (-)
+671,Önceki Dönem Gelir ve Karları,Income and Profit Relating to Previous Periods
+679,Diğer Olağandışı Gelir ve Karlar,Other Extraordinary Expenses and Losses (-)
+680,Çalışmayan Kısım Gider ve Zararları (-),Idle Capacity Expenses and Losses (-)
+681,Önceki Dönem Gider ve Zararları (-),Previous Period Expenses and Losses (-)
+689,Diğer Olağandışı Gider ve Zararlar (-),Other Extraordinary Expense and Losses (-)
+710,Direkt İlk Madde Ve Malzeme,Direct Raw Materials And Supplies Expenses
+711,Direkt İlk Madde Ve Malzeme Yansıtma,Reflection Account For Direct Raw Materials And Supplies
+712,Direkt İlk Madde ve Mal. Fiyat Farkı,Price Differences Of Direct Raw Materials And Supplies
+713,Direkt İlk Madde ve Mal. Miktar Farkı,Quantity Differences Of Direct Raw Materials And Supplies
+720,Direkt İşçilik Giderleri,Direct Labour Expenses
+721,Direkt İşçilik Giderleri Yansıtma Hesabı,Reflection Account For Direct Labour Expenses
+722,Direkt İşçilik Ücret Farkları,Direct Labor Wage Differences
+723,Direkt İşçilik Süre (Zaman) Farkları,Direct Labor Time Differences
+730,Genel Üretim Giderleri,General Production Expenses
+731,Genel Üretim Giderleri Yansıtma Hesabı,Reflection Account For General Production Expenses
+732,Genel Üretim Giderleri Bütçe Farkları,Budget Differences Of General Production Expenses
+733,Genel Üretim Giderleri Verimlilik Farkları,Productivity Differences Of General Production Expenses
+734,Genel Üretim Giderleri Kapasite Farkları,Capacity Differences Of General ProductionExpenses
+740,Hizmet Üretim Maliyeti,Cost Of Production Of Services
+741,Hizmet Üretim Maliyeti Yansıtma Hesabı,Reflection Account For Cost Of Production Of Services
+742,Hizmet Üretim Maliyeti Fark Hesapları,Cost Of Production Of Services Difference Account
+750,Araştırma ve Geliştirme Giderleri,Research And Development Expenses
+751,Araştırma ve Geliştirme Giderleri Yansıtma Hesabı,Reflection Account For Research And Development Expenses
+752,Araştırma ve Geliştirme Gider Farkları,Research And Development ExpensesDifference Account
+760,Pazarlama Satış ve Dağıtım Giderleri,Marketing Sales And Distribution Expenses
+761,Pazarlama Satış ve Dağıtım Giderleri Yansıtma Hesabı,Reflection Account For Marketing Sales And Distribution Expenses
+762,Pazarlama Satış Dağıtım Giderleri Fark Hesabı,Marketing Sales And Distribution ExpensesDifference Account
+770,Genel Yönetim Giderleri,General And Administrative Expenses
+771,Genel Yönetim Giderleri Yansıtma Hesabı,Reflection Account For General AndAdministrative Expenses
+772,Genel Yönetim Gider Farkları Hesabı,General And Administrative ExpensesDifference Account
+780,Finansman Giderleri Hesabı,Financial Expenses
+781,Finansman Giderleri Hesabı Yansıtma Hesabı,Reflection Account For Financial Expenses
+782,Finansman Giderleri Fark Hesabı,Financial Expenses Difference Account
