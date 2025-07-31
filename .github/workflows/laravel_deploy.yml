@@ -49,7 +49,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /var/www/your-laravel-project
+            cd /pys
             git pull origin main
             composer install --no-dev --optimize-autoloader
             php artisan migrate --force
