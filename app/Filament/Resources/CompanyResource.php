@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Tapp\FilamentAuditing\RelationManagers\AuditsRelationManager;
 
 class CompanyResource extends Resource
 {
@@ -38,11 +39,6 @@ class CompanyResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return __('filament::resources.navigation_groups.' . parent::getNavigationGroup());
-    }
-    
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
     }
     
     public static function canCreate(): bool
@@ -242,6 +238,7 @@ class CompanyResource extends Resource
     {
         return [
             RelationManagers\ProjectsRelationManager::class,
+            AuditsRelationManager::class,
         ];
     }
 
