@@ -95,6 +95,8 @@ class UserResource extends Resource
                             ->maxValue(100)
                             ->minValue(0)
                             ->step(0.01)
+                            ->required()
+                            ->default(0.00)
                             ->helperText(__('filament::resources.help_texts.revenue_percentage')),
                     ])->columns(2),
             ]);

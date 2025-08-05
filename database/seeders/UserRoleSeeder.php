@@ -37,7 +37,8 @@ class UserRoleSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'is_active' => true,
                 'phone' => '+1234567890',
-                'position' => 'System Administrator'
+                'position' => 'System Administrator',
+                'revenue_percentage' => 10.00
             ]
         );
         $adminUser->assignRole('super-admin');
@@ -50,7 +51,8 @@ class UserRoleSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'is_active' => true,
                 'phone' => '+1987654321',
-                'position' => 'CEO'
+                'position' => 'CEO',
+                'revenue_percentage' => 15.00
             ]
         );
         $companyOwnerUser->assignRole('company-owner');
@@ -63,7 +65,8 @@ class UserRoleSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'is_active' => true,
                 'phone' => '+1122334455',
-                'position' => 'Project Manager'
+                'position' => 'Project Manager',
+                'revenue_percentage' => 8.50
             ]
         );
         $projectManagerUser->assignRole('project-manager');
@@ -76,7 +79,8 @@ class UserRoleSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'is_active' => true,
                 'phone' => '+1555666777',
-                'position' => 'Developer'
+                'position' => 'Developer',
+                'revenue_percentage' => 5.25
             ]
         );
         $teamMemberUser->assignRole('team-member');
@@ -91,6 +95,20 @@ class UserRoleSeeder extends Seeder
                 'description' => 'Example company for demonstration purposes',
                 'is_active' => true,
                 'created_by' => $companyOwnerUser->id
+            ]
+        );
+        
+        // Create main company
+        $mainCompany = Company::firstOrCreate(
+            ['name' => 'Main Company'],
+            [
+                'address' => '456 Main Street',
+                'phone' => '+1888777666',
+                'email' => 'info@maincompany.com',
+                'description' => 'Main company for the system',
+                'is_active' => true,
+                'is_main' => true,
+                'created_by' => $adminUser->id
             ]
         );
         

@@ -90,6 +90,7 @@ class TaskResource extends Resource
                         Forms\Components\Select::make('assigned_to')
                             ->label(__('filament::resources.fields.responsible_person'))
                             ->relationship('assignedUser', 'name')
+                            ->required()
                             ->searchable()
                             ->preload(),
                         Forms\Components\Placeholder::make('created_by')
