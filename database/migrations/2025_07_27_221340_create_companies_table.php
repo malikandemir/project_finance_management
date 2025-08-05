@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('tax_number')->nullable();
+            $table->Integer('owner_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('logo')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
