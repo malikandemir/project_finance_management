@@ -65,8 +65,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             # Check if directory exists
-            if [ -d "/home/malikan2/pys" ]; then
-              cd /home/malikan2/pys
+            if [ -d "/home/malikan2/pys2" ]; then
+              cd /home/malikan2/pys2
               git pull origin main
               composer install --no-dev --optimize-autoloader
               php artisan migrate --force
@@ -74,7 +74,16 @@ jobs:
               php artisan route:cache
               php artisan view:cache
             else
-              echo "Directory /home/malikan2/pys does not exist"
-              echo "Current directory structure:"
-              ls -la /
+              echo "Directory /home/malikan2/pys2 does not exist, creating it..."
+              mkdir -p /home/malikan2/pys2
+              cd /home/malikan2
+              git clone https://github.com/malikandemir/project_finance_management.git pys2
+              cd pys2
+              composer install --no-dev --optimize-autoloader
+              cp .env.example .env
+              php artisan key:generate
+              php artisan migrate --force
+              php artisan config:cache
+              php artisan route:cache
+              php artisan view:cache
             fi
