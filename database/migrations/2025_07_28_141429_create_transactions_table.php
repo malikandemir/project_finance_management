@@ -17,6 +17,7 @@ return new class extends Migration
             $table->tinyInteger('debit_credit')->comment('1: debit, 2: credit');
             $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('transaction_group_id')->constrained('transaction_groups')->cascadeOnDelete();
             $table->decimal('balance_after_transaction', 15, 2);
             $table->dateTime('transaction_date');
             $table->timestamps();
