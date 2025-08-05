@@ -65,8 +65,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             # Check if directory exists
-            if [ -d "/pys" ]; then
-              cd /pys
+            if [ -d "/home/malikan2/pys" ]; then
+              cd /home/malikan2/pys
               git pull origin main
               composer install --no-dev --optimize-autoloader
               php artisan migrate --force
@@ -74,7 +74,7 @@ jobs:
               php artisan route:cache
               php artisan view:cache
             else
-              echo "Directory /pys does not exist"
+              echo "Directory /home/malikan2/pys does not exist"
               echo "Current directory structure:"
               ls -la /
             fi
