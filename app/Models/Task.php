@@ -24,11 +24,17 @@ class Task extends Model implements Auditable
         'assigned_to',
         'price',
         'cost_percentage',
+        'is_paid',
+        'is_get_paid',
+        'payment_account_id',
+        'get_paid_account_id',
     ];
     
     protected $casts = [
         'is_completed' => 'boolean',
         'due_date' => 'date',
+        'is_paid' => 'boolean',
+        'is_get_paid' => 'boolean',
     ];
     
     /**

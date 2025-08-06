@@ -448,4 +448,236 @@ class TaskObserver
     {
         //
     }
+    
+    /**
+     * Process the "get paid" action for a task.
+     * 
+     * @param Task $task
+     * @param int $mainCompanyAccountId The selected main company account (100 or 102)
+     * @return bool
+     */
+    public function getPaid(Task $task, int $mainCompanyAccountId): bool
+    {
+        // Check if task has already been paid
+        if ($task->is_get_paid) {
+            throw new \Exception('This task has already been paid');
+        }
+        
+        // Check if task has a price
+        if (!$task->price || $task->price <= 0) {
+            throw new \Exception('Task has no price or price is zero');
+        }
+        
+        try {
+            // Begin transaction
+            DB::beginTransaction();
+            
+            // Create a transaction group for all related transactions
+            $transactionGroup = TransactionGroup::create([
+                'name' => "Get Paid for Task #{$task->id} - {$task->title}",
+                'description' => "Get Paid Transactions for Task #{$task->id} in Project #{$task->project_id}",
+                'group_date' => now(),
+                'user_id' => $task->project->responsible_user_id,
+            ]);
+            
+            // Get the main company
+            $mainCompany = MainCompanyHelper::getMainCompany();
+            if (!$mainCompany) {
+                throw new \Exception('No main company found for accounting operations');
+            }
+            
+            // Get the project company
+            $projectCompany = $task->project->company;
+            if (!$projectCompany) {
+                throw new \Exception('No company found for the task project');
+            }
+            
+            // Get the selected main company account
+            $mainCompanyAccount = Account::find($mainCompanyAccountId);
+            if (!$mainCompanyAccount) {
+                throw new \Exception('Selected main company account not found');
+            }
+            
+            // Verify the account belongs to the main company and is 100 or 102
+            $uniformAccount = $mainCompanyAccount->uniformChartOfAccount;
+            if (!$uniformAccount || !in_array($uniformAccount->number, ['100', '102'])) {
+                throw new \Exception('Selected account is not a valid main company account (100 or 102)');
+            }
+            
+            // Get the project company account (120)
+            $projectCompanyAccount = $this->getOrCreateAccount($projectCompany->name, '120', $projectCompany->owner_id);
+            
+            // Amount to use for transactions
+            $amount = $task->price;
+            
+            // Create debit transaction for main company account (100/102) - Asset increases with debit
+            $newMainBalance = $mainCompanyAccount->balance + $amount;
+            $description = "Get Paid: Project #{$task->project_id}, Task #{$task->id}, {$mainCompany->name}";
+            $this->createTransaction(
+                $amount,
+                Transaction::DEBIT,
+                $mainCompanyAccount->id,
+                $task->project->responsible_user_id,
+                $newMainBalance,
+                substr($description, 0, 120),
+                $transactionGroup->id
+            );
+            
+            // Update main company account balance
+            $mainCompanyAccount->balance = $newMainBalance;
+            $mainCompanyAccount->save();
+            
+            // Create credit transaction for project company (120) - Receivable decreases with credit
+            $newProjectBalance = $projectCompanyAccount->balance - $amount;
+            $description = "Get Paid: Project #{$task->project_id}, Task #{$task->id}, {$projectCompany->name}";
+            $this->createTransaction(
+                $amount,
+                Transaction::CREDIT,
+                $projectCompanyAccount->id,
+                $task->project->responsible_user_id,
+                $newProjectBalance,
+                substr($description, 0, 120),
+                $transactionGroup->id
+            );
+            
+            // Update project company account balance
+            $projectCompanyAccount->balance = $newProjectBalance;
+            $projectCompanyAccount->save();
+            
+            // Update task with payment information
+            $task->is_get_paid = true;
+            $task->get_paid_account_id = $mainCompanyAccountId;
+            $task->save();
+            
+            // Commit transaction
+            DB::commit();
+            
+            return true;
+            
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+            Log::error('Error processing task get paid: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    /**
+     * Process the "pay" action for a task.
+     * 
+     * @param Task $task
+     * @param int $mainCompanyAccountId The selected main company account (100 or 102)
+     * @return bool
+     */
+    public function pay(Task $task, int $mainCompanyAccountId): bool
+    {
+        // Check if task has already been paid
+        if ($task->is_paid) {
+            throw new \Exception('This task has already been paid');
+        }
+        
+        // Check if task has a price
+        if (!$task->price || $task->price <= 0) {
+            throw new \Exception('Task has no price or price is zero');
+        }
+        
+        try {
+            // Begin transaction
+            DB::beginTransaction();
+            
+            // Create a transaction group for all related transactions
+            $transactionGroup = TransactionGroup::create([
+                'name' => "Pay for Task #{$task->id} - {$task->title}",
+                'description' => "Pay Transactions for Task #{$task->id} in Project #{$task->project_id}",
+                'group_date' => now(),
+                'user_id' => $task->project->responsible_user_id,
+            ]);
+            
+            // Get the main company
+            $mainCompany = MainCompanyHelper::getMainCompany();
+            if (!$mainCompany) {
+                throw new \Exception('No main company found for accounting operations');
+            }
+            
+            // Get the selected main company account
+            $mainCompanyAccount = Account::find($mainCompanyAccountId);
+            if (!$mainCompanyAccount) {
+                throw new \Exception('Selected main company account not found');
+            }
+            
+            // Verify the account belongs to the main company and is 100 or 102
+            $uniformAccount = $mainCompanyAccount->uniformChartOfAccount;
+            if (!$uniformAccount || !in_array($uniformAccount->number, ['100', '102'])) {
+                throw new \Exception('Selected account is not a valid main company account (100 or 102)');
+            }
+            
+            // Get the responsible user
+            $responsibleUser = $task->assignedUser;
+            if (!$responsibleUser) {
+                throw new \Exception('No responsible user found for the task');
+            }
+            
+            // Get the responsible person account (320)
+            $responsiblePersonAccount = $this->getOrCreateAccount($responsibleUser->name, '320', $responsibleUser->id);
+            
+            // Calculate payment amount based on cost_percentage or revenue_percentage
+            $percentage = $task->cost_percentage > 0 ? $task->cost_percentage : $responsibleUser->revenue_percentage;
+            $amount = $task->price * ($percentage / 100);
+            
+            // If no percentage is set or amount is zero, throw an exception
+            if ($percentage <= 0 || $amount <= 0) {
+                throw new \Exception('No valid cost or revenue percentage found for payment calculation');
+            }
+            
+            // Create credit transaction for main company account (100/102) - Asset decreases with credit
+            $newMainBalance = $mainCompanyAccount->balance - $amount;
+            $description = "Pay: Project #{$task->project_id}, Task #{$task->id}, {$mainCompany->name} ({$percentage}%)";
+            $this->createTransaction(
+                $amount,
+                Transaction::CREDIT,
+                $mainCompanyAccount->id,
+                $task->project->responsible_user_id,
+                $newMainBalance,
+                substr($description, 0, 120),
+                $transactionGroup->id
+            );
+            
+            // Update main company account balance
+            $mainCompanyAccount->balance = $newMainBalance;
+            $mainCompanyAccount->save();
+            
+            // Create debit transaction for responsible person account (320) - Liability decreases with debit
+            $newPersonBalance = $responsiblePersonAccount->balance + $amount;
+            $description = "Pay: Project #{$task->project_id}, Task #{$task->id}, {$responsibleUser->name} ({$percentage}%)";
+            $this->createTransaction(
+                $amount,
+                Transaction::DEBIT,
+                $responsiblePersonAccount->id,
+                $responsibleUser->id,
+                $newPersonBalance,
+                substr($description, 0, 120),
+                $transactionGroup->id
+            );
+            
+            // Update responsible person account balance
+            $responsiblePersonAccount->balance = $newPersonBalance;
+            $responsiblePersonAccount->save();
+            
+            // Update task with payment information
+            $task->is_paid = true;
+            $task->payment_account_id = $mainCompanyAccountId;
+            $task->save();
+            
+            // Commit transaction
+            DB::commit();
+            
+            return true;
+            
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+            Log::error('Error processing task payment: ' . $e->getMessage());
+            throw $e;
+        }
+    }
 }
