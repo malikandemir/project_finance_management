@@ -118,8 +118,8 @@ class TransactionResource extends Resource
                     ->label(__('filament::resources.fields.transaction_type'))
                     ->badge()
                     ->color(fn (int $state): string => match ($state) {
-                        Transaction::DEBIT => 'danger',
-                        Transaction::CREDIT => 'success',
+                        Transaction::DEBIT => 'success',
+                        Transaction::CREDIT => 'danger',
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (int $state): string => match ($state) {

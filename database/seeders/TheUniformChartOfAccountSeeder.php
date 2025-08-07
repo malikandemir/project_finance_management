@@ -22,8 +22,14 @@ class TheUniformChartOfAccountSeeder extends Seeder
             return;
         }
         
+        // Temporarily disable foreign key checks to allow truncation
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
         // Clear existing records
         TheUniformChartOfAccount::truncate();
+        
+        // Re-enable foreign key checks
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         // Open the CSV file
         if (($handle = fopen($csvFile, 'r')) !== false) {

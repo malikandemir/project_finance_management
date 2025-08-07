@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             UserRoleSeeder::class,
             TheUniformChartOfAccountSeeder::class,
             AccountGroupSeeder::class,
+            MainCompanyAccountSeeder::class,
+            HelpDocumentSeeder::class,
         ]);
     }
 }

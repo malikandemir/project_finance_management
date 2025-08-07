@@ -51,7 +51,7 @@ class TransactionsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('debit_credit')
                     ->badge()
                     ->formatStateUsing(fn (int $state): string => $state === 1 ? 'Debit' : 'Credit')
-                    ->color(fn (int $state): string => $state === 1 ? 'danger' : 'success')
+                    ->color(fn (int $state): string => $state === 1 ? 'success' : 'danger')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('balance_after_transaction')
                     ->label('Balance After')

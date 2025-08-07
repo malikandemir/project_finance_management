@@ -18,15 +18,28 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
+        // Default to English
+        $locale = 'en';
+        
+        // Get locale from session if available
         if (Session::has('locale')) {
-            $locale = Session::get('locale');
+            $sessionLocale = Session::get('locale');
             
-            // Check if the locale is supported
-            if (in_array($locale, ['en', 'tr'])) {
-                App::setLocale($locale);
+            // Ensure locale is a string and supported
+            if (is_string($sessionLocale) && in_array($sessionLocale, ['en', 'tr'])) {
+                $locale = $sessionLocale;
+            } else {
+                // Reset invalid locale in session
+                Session::put('locale', $locale);
             }
         }
-
-        return $next($request);
+        
+        // Set the application locale
+        App::setLocale($locale);
+        
+        // Process the request
+        $response = $next($request);
+        
+        return $response;
     }
 }

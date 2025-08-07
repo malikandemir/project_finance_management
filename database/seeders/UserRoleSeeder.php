@@ -98,6 +98,21 @@ class UserRoleSeeder extends Seeder
             ]
         );
         
+        // Create a user with the same name as the company with company-owner role
+        $companyNamedUser = User::firstOrCreate(
+            ['email' => 'example@examplecompany.com'],
+            [
+                'name' => 'Example Company Ltd.',
+                'password' => Hash::make('password'),
+                'is_active' => true,
+                'phone' => '+1999888777',
+                'position' => 'Company Owner',
+                'revenue_percentage' => 15.00,
+                'company_id' => $company->id
+            ]
+        );
+        $companyNamedUser->assignRole('company-owner');
+        
         // Create main company
         $mainCompany = Company::firstOrCreate(
             ['name' => 'Main Company'],
@@ -111,6 +126,21 @@ class UserRoleSeeder extends Seeder
                 'created_by' => $adminUser->id
             ]
         );
+        
+        // Create a user with the same name as the main company with company-owner role
+        $mainCompanyUser = User::firstOrCreate(
+            ['email' => 'main@maincompany.com'],
+            [
+                'name' => 'Main Company',
+                'password' => Hash::make('password'),
+                'is_active' => true,
+                'phone' => '+1888777666',
+                'position' => 'Company Owner',
+                'revenue_percentage' => 15.00,
+                'company_id' => $mainCompany->id
+            ]
+        );
+        $mainCompanyUser->assignRole('company-owner');
         
         // Associate users with company
         $companyOwnerUser->update(['company_id' => $company->id]);
@@ -154,7 +184,9 @@ class UserRoleSeeder extends Seeder
                 'due_date' => now()->addWeeks(2),
                 'is_completed' => false,
                 'created_by' => $projectManagerUser->id,
-                'assigned_to' => $teamMemberUser->id
+                'assigned_to' => $teamMemberUser->id,
+                'price' => 500.00,
+                'cost_percentage' => 70.00
             ]);
             
             $project1->tasks()->create([
@@ -165,7 +197,9 @@ class UserRoleSeeder extends Seeder
                 'due_date' => now()->addWeeks(4),
                 'is_completed' => false,
                 'created_by' => $projectManagerUser->id,
-                'assigned_to' => $teamMemberUser->id
+                'assigned_to' => $teamMemberUser->id,
+                'price' => 1200.00,
+                'cost_percentage' => 65.00
             ]);
         }
         
@@ -178,7 +212,9 @@ class UserRoleSeeder extends Seeder
                 'due_date' => now()->addWeeks(3),
                 'is_completed' => false,
                 'created_by' => $projectManagerUser->id,
-                'assigned_to' => $projectManagerUser->id
+                'assigned_to' => $projectManagerUser->id,
+                'price' => 800.00,
+                'cost_percentage' => 75.00
             ]);
             
             $project2->tasks()->create([
@@ -189,7 +225,9 @@ class UserRoleSeeder extends Seeder
                 'due_date' => now()->addWeeks(5),
                 'is_completed' => false,
                 'created_by' => $projectManagerUser->id,
-                'assigned_to' => $teamMemberUser->id
+                'assigned_to' => $teamMemberUser->id,
+                'price' => 1500.00,
+                'cost_percentage' => 60.00
             ]);
         }
     }

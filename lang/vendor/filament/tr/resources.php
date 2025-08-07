@@ -95,6 +95,18 @@ return [
         'unknown' => 'Bilinmiyor',
     ],
     
+    'widgets' => [
+        'task_summary' => [
+            'total_tasks' => 'Toplam Görevler',
+            'tasks_in_project' => 'Bu projedeki görevler',
+            'task_status' => 'Görev Durumu',
+            'financial_summary' => 'Finansal Özet',
+            'total' => 'Toplam',
+            'paid' => 'Ödenen',
+            'get_paid' => 'Tahsil Edilen',
+        ],
+    ],
+    
     'resources' => [
         'AccountResource' => [
             'label' => 'Hesap',
