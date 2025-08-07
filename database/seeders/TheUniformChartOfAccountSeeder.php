@@ -23,13 +23,21 @@ class TheUniformChartOfAccountSeeder extends Seeder
         }
         
         // Temporarily disable foreign key checks to allow truncation
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        if (\DB::connection()->getDriverName() === 'mysql') {
+            \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        } elseif (\DB::connection()->getDriverName() === 'sqlite') {
+            \DB::statement('PRAGMA foreign_keys = OFF;');
+        }
         
         // Clear existing records
         TheUniformChartOfAccount::truncate();
         
         // Re-enable foreign key checks
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (\DB::connection()->getDriverName() === 'mysql') {
+            \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        } elseif (\DB::connection()->getDriverName() === 'sqlite') {
+            \DB::statement('PRAGMA foreign_keys = ON;');
+        }
         
         // Open the CSV file
         if (($handle = fopen($csvFile, 'r')) !== false) {
