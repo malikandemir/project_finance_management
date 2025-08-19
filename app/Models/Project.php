@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Project extends Model implements Auditable
@@ -60,5 +61,21 @@ class Project extends Model implements Auditable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+    
+    /**
+     * Get all comments for the project.
+     */
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+    
+    /**
+     * Get all transaction groups for the project.
+     */
+    public function transactionGroups(): MorphMany
+    {
+        return $this->morphMany(TransactionGroup::class, 'transactionable');
     }
 }

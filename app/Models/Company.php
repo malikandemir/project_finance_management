@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Company extends Model implements Auditable
@@ -50,5 +51,13 @@ class Company extends Model implements Auditable
     public function projects()
     {
         return $this->hasMany(Project::class);
+    }
+    
+    /**
+     * Get all comments for this company.
+     */
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }

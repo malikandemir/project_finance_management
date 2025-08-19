@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TaskResource\Pages;
 use App\Models\Task;
+use App\Filament\Resources\Components\CommentsSection;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -11,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\RelationManagers\CommentsRelationManager;
+use App\Filament\RelationManagers\TransactionGroupsRelationManager;
 
 class TaskResource extends Resource
 {
@@ -117,6 +120,12 @@ class TaskResource extends Resource
                             ->inputMode('decimal')
                             ->maxValue(100),
                     ])->columns(2),
+                    
+                // Add Comments Section (only visible on edit/view pages, not on create)
+                Forms\Components\Placeholder::make('comments_section')
+                    ->content(fn ($record) => $record && $record->exists ? null : 'Comments will be available after saving the task.')
+                    ->visible(fn ($operation) => $operation !== 'create')
+                    ->hiddenOn('create'),
             ]);
     }
 
@@ -239,7 +248,8 @@ class TaskResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CommentsRelationManager::class,
+            TransactionGroupsRelationManager::class,
         ];
     }
     

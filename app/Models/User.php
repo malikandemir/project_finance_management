@@ -81,4 +81,12 @@ class User extends Authenticatable implements Auditable
     {
         return $this->hasMany(Project::class, 'created_by');
     }
+    
+    /**
+     * Get the accounts for the user.
+     */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class, 'user_id');
+    }
 }

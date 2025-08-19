@@ -74,6 +74,11 @@ return [
         'guard_name' => 'Guard Adı',
         'permissions' => 'İzinler',
         'transactions' => 'İşlemler',
+        'comments' => 'Yorumlar',
+        'comment' => 'Yorum',
+        'add_comment' => 'Yorum Ekle',
+        'submit_comment' => 'Yorum Gönder',
+        'no_comments' => 'Henüz yorum yok.',
     ],
     
     'help_texts' => [

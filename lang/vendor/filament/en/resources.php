@@ -74,6 +74,11 @@ return [
         'guard_name' => 'Guard Name',
         'permissions' => 'Permissions',
         'transactions' => 'Transactions',
+        'comments' => 'Comments',
+        'comment' => 'Comment',
+        'add_comment' => 'Add Comment',
+        'submit_comment' => 'Submit Comment',
+        'no_comments' => 'No comments yet.',
     ],
     
     'help_texts' => [

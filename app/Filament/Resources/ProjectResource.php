@@ -4,6 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
+use App\Filament\RelationManagers\CommentsRelationManager;
+use App\Filament\RelationManagers\TasksRelationManager;
+use App\Filament\RelationManagers\TransactionGroupsRelationManager;
+use App\Filament\Resources\Components\CommentsSection;
+use App\Filament\Resources\Components\TasksSection;
 use App\Models\Project;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -84,6 +89,12 @@ class ProjectResource extends Resource
                                 return $record->exists && $record->creator ? $record->creator->name : (auth()->user()->name ?? 'Unknown');
                             }),
                     ])->columns(2),
+                    
+                // Placeholder for comments and tasks (only visible on create page)
+                Forms\Components\Placeholder::make('comments_tasks_placeholder')
+                    ->content('Comments and tasks will be available after saving the project.')
+                    ->visible(fn ($operation) => $operation === 'create')
+                    ->hiddenOn(['edit', 'view']),
             ]);
     }
 
@@ -158,7 +169,9 @@ class ProjectResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\TasksRelationManager::class,
+            CommentsRelationManager::class,
+            TasksRelationManager::class,
+            TransactionGroupsRelationManager::class,
         ];
     }
     

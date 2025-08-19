@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Task extends Model implements Auditable
@@ -59,5 +60,21 @@ class Task extends Model implements Auditable
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+    
+    /**
+     * Get all comments for the task.
+     */
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+    
+    /**
+     * Get all transaction groups for the task.
+     */
+    public function transactionGroups(): MorphMany
+    {
+        return $this->morphMany(TransactionGroup::class, 'transactionable');
     }
 }

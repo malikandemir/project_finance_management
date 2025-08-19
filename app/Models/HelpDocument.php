@@ -22,6 +22,16 @@ class HelpDocument extends Model
     ];
     
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'title' => 'array',
+        'content' => 'array',
+    ];
+    
+    /**
      * Scope a query to only include documents in a specific language.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query

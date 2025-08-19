@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             AccountGroupSeeder::class,
             MainCompanyAccountSeeder::class,
             HelpDocumentSeeder::class,
+            CommentSeeder::class,
         ]);
     }
 }
