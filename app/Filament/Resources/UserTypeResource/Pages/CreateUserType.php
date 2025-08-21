@@ -59,11 +59,18 @@ class CreateUserType extends CreateRecord
             $uniformAccount = TheUniformChartOfAccount::where('number', $accountType)->first();
             
             if ($uniformAccount) {
+                // Find or create the default account group
+                $accountGroup = \App\Models\AccountGroup::where('name', 'Default Group')->first();
+                if (!$accountGroup) {
+                    $accountGroup = \App\Models\AccountGroup::create(['name' => 'Default Group']);
+                }
+                
                 Account::create([
                     'account_name' => $user->name,
                     'balance' => 0,
                     'account_uniform_id' => $uniformAccount->id,
                     'user_id' => $user->id,
+                    'account_group_id' => $accountGroup->id, // Add the account_group_id
                 ]);
             }
         }

@@ -4,24 +4,18 @@ namespace App\Filament\Resources\UserTypeResource\Pages;
 
 use App\Filament\Resources\UserTypeResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 use Filament\Resources\RelationManagers\RelationGroup;
 
-class EditUserType extends EditRecord
+class ViewUserType extends ViewRecord
 {
     protected static string $resource = UserTypeResource::class;
-    
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make(),
         ];
-    }
-    
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
     }
     
     public function getRelationManagers(): array

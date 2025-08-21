@@ -2,10 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserTypeResource\Pages;
+use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\UserTypeResource\RelationManagers;
-use App\Models\Account;
-use App\Models\TheUniformChartOfAccount;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,27 +13,28 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class UserTypeResource extends Resource
+class CustomerResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     
+    // Group all user type resources under 'Cariler' navigation group
     protected static ?string $navigationGroup = 'Cariler';
     
-    protected static ?int $navigationSort = 10;
+    // Set navigation label to be shown in the sidebar
+    protected static ?string $navigationLabel = 'Müşteriler';
     
-    // Hide this resource from navigation since we have dedicated resources
-    protected static bool $shouldRegisterNavigation = false;
+    protected static ?int $navigationSort = 11;
     
     public static function getModelLabel(): string
     {
-        return __('entities.current_accounts');
+        return __('entities.customers');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('entities.current_accounts');
+        return __('entities.customers');
     }
 
     public static function form(Form $form): Form
@@ -79,10 +78,7 @@ class UserTypeResource extends Resource
                     ])->columns(2),
                 
                 Forms\Components\Hidden::make('account_type')
-                    ->default(function (string $context, ?string $state) {
-                        // This will be set based on the page we're on
-                        return $state ?? request()->query('account_type', null);
-                    }),
+                    ->default('120'), // Customer account type
             ]);
     }
 
@@ -116,35 +112,6 @@ class UserTypeResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('user_type')
-                    ->label(__('entities.user_type'))
-                    ->options([
-                        'customers' => __('entities.customers'),
-                        'suppliers' => __('entities.suppliers'),
-                        'employers' => __('entities.employers'),
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        if (empty($data['value'])) {
-                            return $query;
-                        }
-                        
-                        $accountNumber = match ($data['value']) {
-                            'customers' => '120',
-                            'suppliers' => '320',
-                            'employers' => '335',
-                            default => null,
-                        };
-                        
-                        if ($accountNumber) {
-                            return $query->whereHas('accounts', function (Builder $query) use ($accountNumber) {
-                                $query->whereHas('uniformChartOfAccount', function (Builder $query) use ($accountNumber) {
-                                    $query->where('number', $accountNumber);
-                                });
-                            });
-                        }
-                        
-                        return $query;
-                    }),
                 Tables\Filters\SelectFilter::make('company')
                     ->label(__('entities.company'))
                     ->relationship('company', 'name'),
@@ -173,10 +140,10 @@ class UserTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUserTypes::route('/'),
-            'create' => Pages\CreateUserType::route('/create'),
-            'view' => Pages\ViewUserType::route('/{record}'),
-            'edit' => Pages\EditUserType::route('/{record}/edit'),
+            'index' => Pages\ListCustomers::route('/'),
+            'create' => Pages\CreateCustomer::route('/create'),
+            'view' => Pages\ViewCustomer::route('/{record}'),
+            'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }
     
@@ -185,23 +152,11 @@ class UserTypeResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
-    }
-    
-    public static function getUserTypeLabel(User $user): string
-    {
-        $accountType = $user->accounts()
-            ->whereHas('uniformChartOfAccount', function (Builder $query) {
-                $query->whereIn('number', ['120', '320', '335']);
-            })
-            ->with('uniformChartOfAccount')
-            ->first()?->uniformChartOfAccount?->number;
-            
-        return match ($accountType) {
-            '120' => __('entities.customers'),
-            '320' => __('entities.suppliers'),
-            '335' => __('entities.employers'),
-            default => __('entities.other'),
-        };
+            ])
+            ->whereHas('accounts', function (Builder $query) {
+                $query->whereHas('uniformChartOfAccount', function (Builder $query) {
+                    $query->where('number', '120'); // Customer account code
+                });
+            });
     }
 }

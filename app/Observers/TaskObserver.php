@@ -31,7 +31,7 @@ class TaskObserver
             
             // Create a transaction group for all related transactions
             $transactionGroup = TransactionGroup::create([
-                'name' => "Task #{$task->id} - {$task->name}",
+                'name' => "Task #{$task->id} - {$task->title}",
                 'description' => "Transactions for Task #{$task->id} in Project #{$task->project_id}",
                 'group_date' => now(),
                 'user_id' => $task->project->responsible_user_id,
@@ -90,56 +90,8 @@ class TaskObserver
             $projectCompanyAccount->balance = $newProjectBalance;
             $projectCompanyAccount->save();
             
-            // Additional transactions for responsible person
-            // Get the responsible user
-            $responsibleUser = $task->assignedUser;
-            if (!$responsibleUser) {
-                throw new \Exception('No responsible user found for the task project');
-            }
-            
-            // Calculate amount based on cost_percentage or revenue_percentage
-            $percentage = $task->cost_percentage > 0 ? $task->cost_percentage : $responsibleUser->revenue_percentage;
-            $commissionAmount = $task->price * ($percentage / 100);
-            
-            if ($commissionAmount > 0) {
-                // Get or create accounts
-                $mainCompanyExpenseAccount = $this->getOrCreateAccount($mainCompany->name . ' - Expenses', '621', $mainCompany->owner_id);
-                $responsiblePersonAccount = $this->getOrCreateAccount($responsibleUser->name, '320', $responsibleUser->id);
-                
-                // Create debit transaction for main company expense account (621) - Expense increases with debit
-                $newExpenseBalance = $mainCompanyExpenseAccount->balance + $commissionAmount;
-                $description = "Project #{$task->project_id}, Task #{$task->id}, {$mainCompany->name} (Expense)";
-                $this->createTransaction(
-                    $commissionAmount,
-                    Transaction::DEBIT,
-                    $mainCompanyExpenseAccount->id,
-                    $responsibleUser->id,
-                    $newExpenseBalance,
-                    substr($description, 0, 120),
-                    $transactionGroup->id
-                );
-                
-                // Update main company expense account balance
-                $mainCompanyExpenseAccount->balance = $newExpenseBalance;
-                $mainCompanyExpenseAccount->save();
-                
-                // Create credit transaction for responsible person account (320) - Liability increases with credit
-                $newPersonBalance = $responsiblePersonAccount->balance - $commissionAmount;
-                $description = "Project #{$task->project_id}, Task #{$task->id}, {$responsibleUser->name} (Commission)";
-                $this->createTransaction(
-                    $commissionAmount,
-                    Transaction::CREDIT,
-                    $responsiblePersonAccount->id,
-                    $responsibleUser->id,
-                    $newPersonBalance,
-                    substr($description, 0, 120),
-                    $transactionGroup->id
-                );
-                
-                // Update responsible person account balance
-                $responsiblePersonAccount->balance = $newPersonBalance;
-                $responsiblePersonAccount->save();
-            }
+            // Note: Transactions between main company and responsible person are now moved to the completeTask method
+            // and will be processed when the task is completed
             
             // Commit transaction
             DB::commit();
@@ -155,6 +107,7 @@ class TaskObserver
      *
      * @param string $accountName
      * @param string $uniformNumber
+     * @param int $userId
      * @return Account
      * @throws \Exception
      */
@@ -178,11 +131,12 @@ class TaskObserver
             ->first();
             
         if (!$account) {
+            // Make sure account_group_id is explicitly set
             $account = Account::create([
                 'account_name' => $accountName,
                 'balance' => 0,
                 'account_uniform_id' => $uniformAccount->id,
-                'account_group_id' => $accountGroup->id,
+                'account_group_id' => $accountGroup->id, // Ensure this is always set
                 'user_id' => $userId,
             ]);
         }
@@ -226,6 +180,13 @@ class TaskObserver
      */
     public function updated(Task $task): void
     {
+        // Check if the task is being marked as completed
+        if ($task->isDirty('is_completed') && $task->is_completed) {
+            // Task is being marked as completed, but we'll handle this in the completeTask method
+            // which should be called directly from the controller/action that's marking the task as completed
+            return;
+        }
+        
         // Check if price was changed
         if (!$task->isDirty('price') || !$task->price) {
             return;
@@ -236,7 +197,7 @@ class TaskObserver
             DB::beginTransaction();
             
             // Find the transaction group for this task
-            $transactionGroup = TransactionGroup::where('name', "Task #{$task->id} - {$task->name}")->first();
+            $transactionGroup = TransactionGroup::where('name', "Task #{$task->id} - {$task->title}")->first();
             
             if (!$transactionGroup) {
                 // If no transaction group exists, treat it as a new task
@@ -279,21 +240,9 @@ class TaskObserver
             $projectCompanyAccount = Account::where('account_name', $projectCompany->name)
                 ->where('user_id', $projectCompany->owner_id)
                 ->first();
-                
-            $mainCompanyExpenseAccount = Account::where('account_name', $mainCompany->name . ' - Expenses')
-                ->where('user_id', $mainCompany->owner_id)
-                ->first();
-                
-            $responsiblePersonAccount = Account::where('account_name', $responsibleUser->name)
-                ->where('user_id', $responsibleUser->id)
-                ->first();
             
             // New amount
             $newAmount = $task->price;
-            
-            // Calculate new commission amount
-            $percentage = $task->cost_percentage > 0 ? $task->cost_percentage : $responsibleUser->revenue_percentage;
-            $newCommissionAmount = $newAmount * ($percentage / 100);
             
             // Update each transaction
             foreach ($transactions as $transaction) {
@@ -325,35 +274,10 @@ class TaskObserver
                     $transaction->amount = $newAmount;
                     $transaction->balance_after_transaction = $projectCompanyAccount->balance;
                     $transaction->save();
-                    
-                } else if ($mainCompanyExpenseAccount && $transaction->account_id === $mainCompanyExpenseAccount->id && $transaction->debit_credit === Transaction::DEBIT) {
-                    // This is the main company expense transaction
-                    $oldAmount = $transaction->amount;
-                    $diffAmount = $newCommissionAmount - $oldAmount;
-                    
-                    // Update account balance (debit increases balance)
-                    $mainCompanyExpenseAccount->balance += $diffAmount;
-                    $mainCompanyExpenseAccount->save();
-                    
-                    // Update transaction
-                    $transaction->amount = $newCommissionAmount;
-                    $transaction->balance_after_transaction = $mainCompanyExpenseAccount->balance;
-                    $transaction->save();
-                    
-                } else if ($responsiblePersonAccount && $transaction->account_id === $responsiblePersonAccount->id && $transaction->debit_credit === Transaction::CREDIT) {
-                    // This is the responsible person commission transaction
-                    $oldAmount = $transaction->amount;
-                    $diffAmount = $newCommissionAmount - $oldAmount;
-                    
-                    // Update account balance (credit decreases balance)
-                    $responsiblePersonAccount->balance -= $diffAmount;
-                    $responsiblePersonAccount->save();
-                    
-                    // Update transaction
-                    $transaction->amount = $newCommissionAmount;
-                    $transaction->balance_after_transaction = $responsiblePersonAccount->balance;
-                    $transaction->save();
                 }
+                
+                // Note: We don't update the main company expense and responsible person transactions here
+                // as those will be created only when the task is completed via the completeTask method
             }
             
             // Commit transaction
@@ -447,6 +371,114 @@ class TaskObserver
     public function forceDeleted(Task $task): void
     {
         //
+    }
+    
+    /**
+     * Process transactions when a task is completed.
+     * This handles the transactions between main company and responsible person
+     * that should only happen after task completion.
+     * 
+     * @param Task $task
+     * @return bool
+     */
+    public function completeTask(Task $task): bool
+    {
+        // Check if task is already completed
+        if ($task->is_completed) {
+            throw new \Exception('This task is already marked as completed');
+        }
+        
+        // Check if task has a price
+        if (!$task->price || $task->price <= 0) {
+            // Just mark as completed without financial transactions
+            $task->is_completed = true;
+            $task->save();
+            return true;
+        }
+        
+        try {
+            // Begin transaction
+            DB::beginTransaction();
+            
+            // Create a transaction group for completion transactions
+            $transactionGroup = TransactionGroup::create([
+                'name' => "Task Completion #{$task->id} - {$task->title}",
+                'description' => "Completion Transactions for Task #{$task->id} in Project #{$task->project_id}",
+                'group_date' => now(),
+                'user_id' => $task->project->responsible_user_id,
+            ]);
+            
+            // Get the main company
+            $mainCompany = MainCompanyHelper::getMainCompany();
+            if (!$mainCompany) {
+                throw new \Exception('No main company found for accounting operations');
+            }
+            
+            // Get the responsible user
+            $responsibleUser = $task->assignedUser;
+            if (!$responsibleUser) {
+                throw new \Exception('No responsible user found for the task');
+            }
+            
+            // Calculate amount based on cost_percentage or revenue_percentage
+            $percentage = $task->cost_percentage > 0 ? $task->cost_percentage : $responsibleUser->revenue_percentage;
+            $commissionAmount = $task->price * ($percentage / 100);
+            
+            if ($commissionAmount > 0) {
+                // Get or create accounts
+                $mainCompanyExpenseAccount = $this->getOrCreateAccount($mainCompany->name . ' - Expenses', '621', $mainCompany->owner_id);
+                $responsiblePersonAccount = $this->getOrCreateAccount($responsibleUser->name, '320', $responsibleUser->id);
+                
+                // Create debit transaction for main company expense account (621) - Expense increases with debit
+                $newExpenseBalance = $mainCompanyExpenseAccount->balance + $commissionAmount;
+                $description = "Task Completion: Project #{$task->project_id}, Task #{$task->id}, {$mainCompany->name} (Expense)";
+                $this->createTransaction(
+                    $commissionAmount,
+                    Transaction::DEBIT,
+                    $mainCompanyExpenseAccount->id,
+                    $responsibleUser->id,
+                    $newExpenseBalance,
+                    substr($description, 0, 120),
+                    $transactionGroup->id
+                );
+                
+                // Update main company expense account balance
+                $mainCompanyExpenseAccount->balance = $newExpenseBalance;
+                $mainCompanyExpenseAccount->save();
+                
+                // Create credit transaction for responsible person account (320) - Liability increases with credit
+                $newPersonBalance = $responsiblePersonAccount->balance - $commissionAmount;
+                $description = "Task Completion: Project #{$task->project_id}, Task #{$task->id}, {$responsibleUser->name} (Commission)";
+                $this->createTransaction(
+                    $commissionAmount,
+                    Transaction::CREDIT,
+                    $responsiblePersonAccount->id,
+                    $responsibleUser->id,
+                    $newPersonBalance,
+                    substr($description, 0, 120),
+                    $transactionGroup->id
+                );
+                
+                // Update responsible person account balance
+                $responsiblePersonAccount->balance = $newPersonBalance;
+                $responsiblePersonAccount->save();
+            }
+            
+            // Mark task as completed
+            $task->is_completed = true;
+            $task->save();
+            
+            // Commit transaction
+            DB::commit();
+            
+            return true;
+            
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+            Log::error('Error processing task completion accounting: ' . $e->getMessage());
+            throw $e;
+        }
     }
     
     /**

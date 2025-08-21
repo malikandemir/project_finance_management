@@ -19,21 +19,21 @@ class ListUserTypes extends ListRecords
         // Default actions for all users
         $actions = [
             Actions\CreateAction::make()
-                ->label(__('Add User'))
+                ->label(__('entities.add_user'))
                 ->url(fn (): string => UserTypeResource::getUrl('create')),
         ];
         
         // Add specific user type actions
         $actions[] = Actions\Action::make('addCustomer')
-            ->label(__('Add Customer'))
+            ->label(__('entities.add_customer'))
             ->url(fn (): string => UserTypeResource::getUrl('create', ['account_type' => '120', 'user_type' => 'customers']));
             
         $actions[] = Actions\Action::make('addSupplier')
-            ->label(__('Add Supplier'))
+            ->label(__('entities.add_supplier'))
             ->url(fn (): string => UserTypeResource::getUrl('create', ['account_type' => '320', 'user_type' => 'suppliers']));
             
         $actions[] = Actions\Action::make('addEmployer')
-            ->label(__('Add Employer'))
+            ->label(__('entities.add_employer'))
             ->url(fn (): string => UserTypeResource::getUrl('create', ['account_type' => '335', 'user_type' => 'employers']));
         
         return $actions;
