@@ -32,7 +32,7 @@ class CreateCompany extends CreateRecord
             $userData = [
                 'name' => $data['name'] . ' Owner',
                 'email' => $data['email'] ?? 'owner_' . time() . '@' . strtolower(str_replace(' ', '', $data['name'])) . '.com',
-                'password' => Hash::make('password'), // Default password, should be changed later
+                'password' => isset($data['password']) ? $data['password'] : Hash::make('password'), // Password is already hashed in the form
                 'is_active' => true,
             ];
             

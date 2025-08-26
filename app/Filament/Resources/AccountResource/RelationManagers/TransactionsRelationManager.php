@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AccountResource\RelationManagers;
 
+use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -22,9 +23,10 @@ class TransactionsRelationManager extends RelationManager
                     ->required()
                     ->numeric(),
                 Forms\Components\Select::make('debit_credit')
+                    ->label(__('filament::resources.fields.transaction_type'))
                     ->options([
-                        1 => 'Debit',
-                        2 => 'Credit',
+                        Transaction::DEBIT => 'Debit',
+                        Transaction::CREDIT => 'Credit',
                     ])
                     ->required(),
                 Forms\Components\TextInput::make('balance_after_transaction')
@@ -50,8 +52,16 @@ class TransactionsRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\TextColumn::make('debit_credit')
                     ->badge()
-                    ->formatStateUsing(fn (int $state): string => $state === 1 ? 'Debit' : 'Credit')
-                    ->color(fn (int $state): string => $state === 1 ? 'success' : 'danger')
+                    ->formatStateUsing(function (int $state): string {
+                        if ($state === Transaction::DEBIT) {
+                            return 'Debit';
+                        } elseif ($state === Transaction::CREDIT) {
+                            return 'Credit';
+                        } else {
+                            return 'Unknown';
+                        }
+                    })
+                    ->color(fn (int $state): string => $state === Transaction::DEBIT ? 'success' : 'danger')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('balance_after_transaction')
                     ->label('Balance After')

@@ -23,6 +23,18 @@ return [
     'active_status' => 'Active Status',
     'financial_information' => 'Financial Information',
     'transactions' => 'Transactions',
+    'debit' => 'Debit',
+    'credit' => 'Credit',
+    'unknown' => 'Unknown',
+    'debit_credit' => 'Transaction Type',
+    'amount' => 'Amount',
+    'description' => 'Description',
+    'transaction_date' => 'Transaction Date',
+    'balance_after_transaction' => 'Balance After Transaction',
+    'transaction_group' => 'Transaction Group',
+    'from_date' => 'From Date',
+    'until_date' => 'Until Date',
+    'account' => 'Account',
     
     // Actions
     'edit' => 'Edit',

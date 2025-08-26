@@ -137,6 +137,12 @@ class CompanyResource extends Resource
                                     ->email()
                                     ->required()
                                     ->maxLength(255),
+                                Forms\Components\TextInput::make('password')
+                                    ->label(__('filament::resources.fields.password'))
+                                    ->password()
+                                    ->required()
+                                    ->minLength(8)
+                                    ->dehydrateStateUsing(fn (string $state): string => \Illuminate\Support\Facades\Hash::make($state)),
                             ])
                             ->helperText(__('filament::resources.help_texts.owner_id')),
                     ])->columns(2),

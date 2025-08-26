@@ -54,8 +54,8 @@ class TransactionResource extends Resource
                 Forms\Components\Select::make('debit_credit')
                     ->label(__('filament::resources.fields.transaction_type'))
                     ->options([
-                        Transaction::DEBIT => __('filament::resources.options.debit'),
-                        Transaction::CREDIT => __('filament::resources.options.credit'),
+                        Transaction::DEBIT => 'Debit',
+                        Transaction::CREDIT => 'Credit',
                     ])
                     ->required(),
                 Forms\Components\Select::make('user_id')
@@ -122,10 +122,14 @@ class TransactionResource extends Resource
                         Transaction::CREDIT => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (int $state): string => match ($state) {
-                        Transaction::DEBIT => __('filament::resources.options.debit'),
-                        Transaction::CREDIT => __('filament::resources.options.credit'),
-                        default => __('filament::resources.options.unknown'),
+                    ->formatStateUsing(function (int $state): string {
+                        if ($state === Transaction::DEBIT) {
+                            return 'Debit';
+                        } elseif ($state === Transaction::CREDIT) {
+                            return 'Credit';
+                        } else {
+                            return 'Unknown';
+                        }
                     })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
@@ -170,8 +174,8 @@ class TransactionResource extends Resource
                     ->label(__('filament::resources.fields.account')),
                 Tables\Filters\SelectFilter::make('debit_credit')
                     ->options([
-                        Transaction::DEBIT => __('filament::resources.options.debit'),
-                        Transaction::CREDIT => __('filament::resources.options.credit'),
+                        Transaction::DEBIT => 'Debit',
+                        Transaction::CREDIT => 'Credit',
                     ])
                     ->label(__('filament::resources.fields.transaction_type')),
             ])

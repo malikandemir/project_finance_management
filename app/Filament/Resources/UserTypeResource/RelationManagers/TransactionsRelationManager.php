@@ -39,8 +39,8 @@ class TransactionsRelationManager extends RelationManager
                 Forms\Components\Select::make('debit_credit')
                     ->label(__('entities.debit_credit'))
                     ->options([
-                        Transaction::DEBIT => __('entities.debit'),
-                        Transaction::CREDIT => __('entities.credit'),
+                        Transaction::DEBIT => 'Debit',
+                        Transaction::CREDIT => 'Credit',
                     ])
                     ->required(),
                 Forms\Components\DateTimePicker::make('transaction_date')
@@ -77,7 +77,15 @@ class TransactionsRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\TextColumn::make('debit_credit')
                     ->label(__('entities.debit_credit'))
-                    ->formatStateUsing(fn (int $state): string => $state === Transaction::DEBIT ? __('entities.debit') : __('entities.credit'))
+                    ->formatStateUsing(function (int $state): string {
+                        if ($state === Transaction::DEBIT) {
+                            return 'Debit';
+                        } elseif ($state === Transaction::CREDIT) {
+                            return 'Credit';
+                        } else {
+                            return 'Unknown';
+                        }
+                    })
                     ->badge()
                     ->color(fn (int $state): string => $state === Transaction::DEBIT ? 'danger' : 'success'),
                 Tables\Columns\TextColumn::make('balance_after_transaction')

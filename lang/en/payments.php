@@ -18,4 +18,16 @@ return [
     'account' => [
         'label' => 'Main Company Account',
     ],
+    'project' => [
+        'get_paid' => [
+            'label' => 'Get Paid',
+            'modal_heading' => 'Get Paid from Project',
+            'modal_description' => 'Select an account from the main company to receive payment from this project.',
+            'success' => 'Payment Processed Successfully',
+            'error' => 'Error Processing Payment',
+            'amount' => 'Amount',
+            'description' => 'Description',
+            'default_description' => 'Payment received from project: :name',
+        ],
+    ],
 ];

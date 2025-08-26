@@ -18,4 +18,16 @@ return [
     'account' => [
         'label' => 'Ana Şirket Hesabı',
     ],
+    'project' => [
+        'get_paid' => [
+            'label' => 'Ödeme Al',
+            'modal_heading' => 'Projeden Ödeme Al',
+            'modal_description' => 'Bu projeden ödeme almak için ana şirketten bir hesap seçin.',
+            'success' => 'Ödeme Başarıyla İşlendi',
+            'error' => 'Ödeme İşleminde Hata',
+            'amount' => 'Tutar',
+            'description' => 'Açıklama',
+            'default_description' => 'Projeden alınan ödeme: :name',
+        ],
+    ],
 ];

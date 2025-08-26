@@ -1,53 +1,45 @@
-# Proje Finans Yönetimi Uygulaması
+# Project Finance Management Application
 
-## Genel Özet
+## General Overview
+The Project Finance Management application is a comprehensive financial management system developed using Laravel and Filament. Below is a general overview of the project, broken down by module:
 
-Proje Finans Yönetimi uygulaması, Laravel ve Filament kullanılarak geliştirilmiş kapsamlı bir finans yönetim sistemidir. Aşağıda projenin modül bazında genel bir özeti bulunmaktadır:
+### Company Management
+- **Companies**: Management of registered companies in the system
+  - Company details (name, email, phone)
+  - Contact information and address management
+  - Company-based permission and authorization system
 
-## Şirket Yönetimi (Company Management)
+### Project Management
+- **Projects**: Management of projects linked to companies
+  - Project timeline (start and end dates)
+  - Assignment of project managers
+  - Project status tracking (active/inactive)
+- **Tasks**: Management of tasks linked to projects
+  - Task assignment and tracking system
+  - Task status and priority management
 
-- **Şirketler (Companies)**: Sistemde kayıtlı şirketlerin yönetimi
-  - Şirket bilgileri (isim, e-posta, telefon)
-  - İletişim bilgileri ve adres yönetimi
-  - Şirket bazlı izin ve yetkilendirme sistemi
+### Accounting Management
+- **Accounts**: Management of financial accounts
+  - Account balance tracking
+  - Categorization with account groups
+  - Integration with the Uniform Chart of Accounts
+- **Transactions**: Recording and tracking of financial transactions
+  - Transaction groups and categorization
+  - Income-expense tracking
 
-## Proje Yönetimi (Project Management)
+### User Management
+- **Users**: Management of system users
+- **Roles & Permissions**: Authorization system
+  - Role-based access control
+  - Customized permission management
 
-- **Projeler (Projects)**: Şirketlere bağlı projelerin yönetimi
-  - Proje zaman çizelgesi (başlangıç ve bitiş tarihleri)
-  - Proje sorumlusu atama
-  - Proje durumu takibi (aktif/pasif)
-- **Görevler (Tasks)**: Projelere bağlı görevlerin yönetimi
-  - Görev atama ve takip sistemi
-  - Görev durumu ve öncelik yönetimi
+### Dashboard and Reporting
+- **Widgets**: Summary views for recent companies, projects, and transactions
+- Financial status summary
+- Project and task status tracking
 
-## Muhasebe Yönetimi (Accounting)
+## Technology and Features
+The application provides a modern and user-friendly interface using the Filament admin panel. It is designed to support multiple languages, making it accessible in various languages. Additionally, it features a containerized structure with Docker, enabling easy setup and deployment.
 
-- **Hesaplar (Accounts)**: Finansal hesapların yönetimi
-  - Hesap bakiyesi takibi
-  - Hesap grupları ile kategorilendirme
-  - Tek Düzen Hesap Planı entegrasyonu
-- **İşlemler (Transactions)**: Finansal işlemlerin kaydı ve takibi
-  - İşlem grupları ve kategorilendirme
-  - Gelir-gider takibi
-
-## Kullanıcı Yönetimi (User Management)
-
-- **Kullanıcılar (Users)**: Sistem kullanıcılarının yönetimi
-- **Roller ve İzinler (Roles & Permissions)**: Yetkilendirme sistemi
-  - Rol bazlı erişim kontrolü
-  - Özelleştirilmiş izin yönetimi
-
-## Dashboard ve Raporlama
-
-- **Widget'lar**: Son şirketler, projeler ve işlemler için özet görünümler
-- Finansal durum özeti
-- Proje ve görev durumu takibi
-
-## Teknoloji ve Özellikler
-
-Uygulama, Filament admin paneli kullanarak modern ve kullanıcı dostu bir arayüz sunmaktadır. Çok dilli destek ile farklı dillerde kullanılabilir şekilde tasarlanmıştır. Ayrıca, Docker ile konteynerize edilmiş bir yapıya sahiptir, bu da kolay kurulum ve dağıtım sağlar.
-
-## Veri İlişkileri
-
-Her modül, ilişkisel bir veritabanı yapısı ile birbirine bağlanmış durumdadır. Örneğin, projeler şirketlere, görevler projelere, hesaplar kullanıcılara bağlıdır. Bu yapı, kapsamlı bir finans ve proje yönetimi ekosistemi oluşturur.
+## Data Relationships
+Each module is interconnected through a relational database structure. For example, projects are linked to companies, tasks to projects, and accounts to users. This structure creates a comprehensive ecosystem for finance and project management.

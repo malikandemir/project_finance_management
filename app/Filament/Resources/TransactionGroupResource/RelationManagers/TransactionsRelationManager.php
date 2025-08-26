@@ -27,6 +27,7 @@ class TransactionsRelationManager extends RelationManager
                     ->numeric()
                     ->step(0.01),
                 Forms\Components\Select::make('debit_credit')
+                    ->label(__('filament::resources.fields.transaction_type'))
                     ->options([
                         Transaction::DEBIT => 'Debit',
                         Transaction::CREDIT => 'Credit',
@@ -59,15 +60,19 @@ class TransactionsRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\TextColumn::make('debit_credit')
                     ->badge()
-                    ->color(fn (int $state): string => match ($state) {
-                        Transaction::DEBIT => 'danger',
-                        Transaction::CREDIT => 'success',
-                        default => 'gray',
+                    ->formatStateUsing(function (int $state): string {
+                        if ($state === Transaction::DEBIT) {
+                            return 'Debit';
+                        } elseif ($state === Transaction::CREDIT) {
+                            return 'Credit';
+                        } else {
+                            return 'Unknown';
+                        }
                     })
-                    ->formatStateUsing(fn (int $state): string => match ($state) {
-                        Transaction::DEBIT => 'Debit',
-                        Transaction::CREDIT => 'Credit',
-                        default => 'Unknown',
+                    ->color(fn (int $state): string => match ($state) {
+                        Transaction::DEBIT => 'success',
+                        Transaction::CREDIT => 'danger',
+                        default => 'gray',
                     })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')

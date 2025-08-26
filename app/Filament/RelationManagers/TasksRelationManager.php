@@ -58,6 +58,17 @@ class TasksRelationManager extends RelationManager
                     ->relationship('assignedUser', 'name')
                     ->searchable()
                     ->preload(),
+                Forms\Components\TextInput::make('price')
+                    ->label(__('filament::resources.fields.price'))
+                    ->numeric()
+                    ->prefix('₺')
+                    ->inputMode('decimal'),
+                Forms\Components\TextInput::make('cost_percentage')
+                    ->label(__('filament::resources.fields.cost_percentage'))
+                    ->numeric()
+                    ->suffix('%')
+                    ->inputMode('decimal')
+                    ->maxValue(100),
             ]);
     }
 
