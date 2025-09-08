@@ -28,6 +28,17 @@ return [
             'amount' => 'Tutar',
             'description' => 'Açıklama',
             'default_description' => 'Projeden alınan ödeme: :name',
+            'default_group_name' => 'Proje için ödeme: :name',
+            'group_name' => 'Grup Adı',
+        ],
+        'payment_status' => [
+            'title' => 'Ödeme Durumu',
+            'total_price' => 'Toplam Proje Fiyatı',
+            'total_paid' => 'Toplam Ödenen Tutar',
+            'status' => 'Ödeme Durumu',
+            'fully_paid' => 'Tamamen Ödendi',
+            'partially_paid' => 'Kısmen Ödendi (%:percentage)',
+            'no_price' => 'Fiyat Belirlenmedi',
         ],
     ],
 ];

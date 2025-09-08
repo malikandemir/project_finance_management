@@ -31,6 +31,7 @@ class CommentsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('content')
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('content')
                     ->label(__('Comment'))

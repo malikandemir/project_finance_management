@@ -26,7 +26,7 @@ class ProjectResource extends Resource
     
     protected static ?string $navigationGroup = 'Project Management';
     
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
     
     public static function getModelLabel(): string
     {
@@ -101,6 +101,7 @@ class ProjectResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('filament::resources.fields.name'))
@@ -169,8 +170,8 @@ class ProjectResource extends Resource
     public static function getRelations(): array
     {
         return [
-            CommentsRelationManager::class,
             TasksRelationManager::class,
+            CommentsRelationManager::class,
             TransactionGroupsRelationManager::class,
         ];
     }

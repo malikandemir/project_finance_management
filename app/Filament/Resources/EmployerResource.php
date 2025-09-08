@@ -25,7 +25,7 @@ class EmployerResource extends Resource
     // Set navigation label to be shown in the sidebar
     protected static ?string $navigationLabel = 'Personel';
     
-    protected static ?int $navigationSort = 13;
+    protected static ?int $navigationSort = 1;
     
     public static function getModelLabel(): string
     {

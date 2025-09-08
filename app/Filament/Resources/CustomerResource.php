@@ -25,7 +25,7 @@ class CustomerResource extends Resource
     // Set navigation label to be shown in the sidebar
     protected static ?string $navigationLabel = 'Müşteriler';
     
-    protected static ?int $navigationSort = 11;
+    protected static ?int $navigationSort = 1;
     
     public static function getModelLabel(): string
     {

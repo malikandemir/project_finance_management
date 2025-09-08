@@ -132,6 +132,7 @@ class TaskResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label(__('filament::resources.fields.title'))
@@ -230,8 +231,6 @@ class TaskResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                \App\Filament\Resources\TaskResource\Actions\GetPaidAction::make(),
-                \App\Filament\Resources\TaskResource\Actions\PayAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),

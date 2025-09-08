@@ -23,7 +23,7 @@ class UserTypeResource extends Resource
     
     protected static ?string $navigationGroup = 'Cariler';
     
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 1;
     
     // Hide this resource from navigation since we have dedicated resources
     protected static bool $shouldRegisterNavigation = false;

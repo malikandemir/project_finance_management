@@ -35,7 +35,7 @@ class AccountGroupResource extends Resource
         return __('filament::resources.navigation_groups.' . parent::getNavigationGroup());
     }
     
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {

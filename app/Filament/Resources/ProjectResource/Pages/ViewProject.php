@@ -25,12 +25,16 @@ class ViewProject extends ViewRecord
 
     protected function getHeaderActions(): array
     {
-        return [
+        $actions = [
             Actions\EditAction::make(),
             Actions\DeleteAction::make(),
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
-            Actions\Action::make('getPaid')
+        ];
+        
+        // Only show the Get Paid button if the project is not fully paid
+        if (!$this->record->isFullyPaid()) {
+            $actions[] = Actions\Action::make('getPaid')
                 ->label(__('payments.project.get_paid.label'))
                 ->icon('heroicon-o-banknotes')
                 ->color('success')
@@ -68,8 +72,10 @@ class ViewProject extends ViewRecord
                 ])
                 ->action(function (array $data): void {
                     $this->processGetPaidTransaction($data);
-                }),
-        ];
+                });
+        }
+        
+        return $actions;
     }
     
     protected function getHeaderWidgets(): array
@@ -99,6 +105,57 @@ class ViewProject extends ViewRecord
     {
         // Get the parent form schema
         $schema = parent::getFormSchema();
+        
+        // Add payment information section
+        $schema[] = Section::make(__('payments.project.payment_status.title'))
+            ->schema([
+                \Filament\Forms\Components\Placeholder::make('total_price')
+                    ->label(__('payments.project.payment_status.total_price'))
+                    ->content(function () {
+                        return number_format($this->record->getTotalPrice(), 2) . ' ' . config('app.currency', 'TRY');
+                    }),
+                \Filament\Forms\Components\Placeholder::make('total_paid')
+                    ->label(__('payments.project.payment_status.total_paid'))
+                    ->content(function () {
+                        return number_format($this->record->getTotalPaid(), 2) . ' ' . config('app.currency', 'TRY');
+                    }),
+                \Filament\Forms\Components\Placeholder::make('payment_status')
+                    ->label(__('payments.project.payment_status.status'))
+                    ->content(function () {
+                        $totalPrice = $this->record->getTotalPrice();
+                        $totalPaid = $this->record->getTotalPaid();
+                        $percentage = ($totalPrice > 0) ? round(($totalPaid / $totalPrice) * 100, 2) : 0;
+                        
+                        if ($this->record->isFullyPaid()) {
+                            $statusText = '<span class="text-success font-medium">' . __('payments.project.payment_status.fully_paid') . '</span>';
+                            $barColor = 'bg-success';
+                        } else {
+                            if ($totalPrice <= 0) {
+                                $statusText = '<span class="text-warning font-medium">' . __('payments.project.payment_status.no_price') . '</span>';
+                                $barColor = 'bg-warning';
+                                $percentage = 0;
+                            } else {
+                                $statusText = '<span class="text-warning font-medium">' . 
+                                    __('payments.project.payment_status.partially_paid', ['percentage' => $percentage]) . 
+                                    '</span>';
+                                $barColor = 'bg-warning';
+                            }
+                        }
+                        
+                        // Create progress bar HTML
+                        $progressBar = <<<HTML
+                        <div class="mt-2">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div class="{$barColor} h-2.5 rounded-full" style="width: {$percentage}%"></div>
+                            </div>
+                        </div>
+                        HTML;
+                        
+                        return $statusText . $progressBar;
+                    })
+                    ->html(),
+            ])
+            ->collapsible();
         
         // Append the comments section
         $schema[] = CommentsSection::make();
@@ -146,6 +203,8 @@ class ViewProject extends ViewRecord
             $transactionGroup = new TransactionGroup();
             $transactionGroup->description = $description;
             $transactionGroup->group_date = now(); // Add group_date field
+            $transactionGroup->user_id = auth()->id(); // Add current logged-in user ID
+            $transactionGroup->name = "Get Paid for Project #{$this->record->id}";
             $transactionGroup->transactionable()->associate($this->record); // Associate with the project
             $transactionGroup->save();
             

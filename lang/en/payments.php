@@ -28,6 +28,17 @@ return [
             'amount' => 'Amount',
             'description' => 'Description',
             'default_description' => 'Payment received from project: :name',
+            'default_group_name' => 'Payment for project: :name',
+            'group_name' => 'Group Name',
+        ],
+        'payment_status' => [
+            'title' => 'Payment Status',
+            'total_price' => 'Total Project Price',
+            'total_paid' => 'Total Amount Paid',
+            'status' => 'Payment Status',
+            'fully_paid' => 'Fully Paid',
+            'partially_paid' => 'Partially Paid (:percentage%)',
+            'no_price' => 'No Price Set',
         ],
     ],
 ];

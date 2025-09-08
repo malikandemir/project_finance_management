@@ -180,10 +180,30 @@ class TaskObserver
      */
     public function updated(Task $task): void
     {
-        // Check if the task is being marked as completed
+        // Check if the task status is being changed
+        if ($task->isDirty('status')) {
+            // Handle status change to completed
+            if ($task->status === 'completed') {
+                $this->handleTaskCompletion($task);
+                return;
+            }
+            
+            // Handle status change from completed to another status
+            if ($task->getOriginal('status') === 'completed' && $task->status !== 'completed') {
+                $this->reverseTaskCompletion($task);
+                return;
+            }
+        }
+        
+        // Check if the task is being marked as completed via is_completed flag
         if ($task->isDirty('is_completed') && $task->is_completed) {
-            // Task is being marked as completed, but we'll handle this in the completeTask method
-            // which should be called directly from the controller/action that's marking the task as completed
+            $this->handleTaskCompletion($task);
+            return;
+        }
+        
+        // Check if the task is being unmarked as completed via is_completed flag
+        if ($task->isDirty('is_completed') && !$task->is_completed && $task->getOriginal('is_completed')) {
+            $this->reverseTaskCompletion($task);
             return;
         }
         
@@ -709,6 +729,211 @@ class TaskObserver
             // Rollback transaction on error
             DB::rollBack();
             Log::error('Error processing task payment: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    /**
+     * Handle task completion when status changes to 'completed'
+     * Creates a transaction group and financial transactions for the task
+     *
+     * @param Task $task
+     * @return bool
+     */
+    public function handleTaskCompletion(Task $task): bool
+    {
+        // Check if task has a price
+        if (!$task->price || $task->price <= 0) {
+            // Just mark as completed without financial transactions
+            $task->is_completed = true;
+            $task->save();
+            return true;
+        }
+        
+        try {
+            // Begin transaction
+            DB::beginTransaction();
+            
+            // Create a transaction group for completion transactions
+            $transactionGroup = TransactionGroup::create([
+                'name' => "Status Completion #{$task->id} - {$task->title}",
+                'description' => "Status Completion Transactions for Task #{$task->id} in Project #{$task->project_id}",
+                'group_date' => now(),
+                'user_id' => $task->project->responsible_user_id,
+                'transactionable_id' => $task->id,
+                'transactionable_type' => get_class($task),
+            ]);
+            
+            // Get the main company
+            $mainCompany = MainCompanyHelper::getMainCompany();
+            if (!$mainCompany) {
+                throw new \Exception('No main company found for accounting operations');
+            }
+            
+            // Get the responsible user
+            $responsibleUser = $task->assignedUser;
+            if (!$responsibleUser) {
+                throw new \Exception('No responsible user found for the task');
+            }
+            
+            // Calculate amount based on cost_percentage or revenue_percentage
+            $percentage = $task->cost_percentage > 0 ? $task->cost_percentage : $responsibleUser->revenue_percentage;
+            $commissionAmount = $task->price * ($percentage / 100);
+            
+            if ($commissionAmount > 0) {
+                // Get or create accounts
+                $mainCompanyExpenseAccount = $this->getOrCreateAccount($mainCompany->name . ' - Expenses', '621', $mainCompany->owner_id);
+                $responsiblePersonAccount = $this->getOrCreateAccount($responsibleUser->name, '320', $responsibleUser->id);
+                
+                // Create debit transaction for main company expense account (621) - Expense increases with debit
+                $newExpenseBalance = $mainCompanyExpenseAccount->balance + $commissionAmount;
+                $description = "Status Completion: Project #{$task->project_id}, Task #{$task->id}, {$mainCompany->name} (Expense)";
+                $this->createTransaction(
+                    $commissionAmount,
+                    Transaction::DEBIT,
+                    $mainCompanyExpenseAccount->id,
+                    $responsibleUser->id,
+                    $newExpenseBalance,
+                    substr($description, 0, 120),
+                    $transactionGroup->id
+                );
+                
+                // Update main company expense account balance
+                $mainCompanyExpenseAccount->balance = $newExpenseBalance;
+                $mainCompanyExpenseAccount->save();
+                
+                // Create credit transaction for responsible person account (320) - Liability increases with credit
+                $newPersonBalance = $responsiblePersonAccount->balance - $commissionAmount;
+                $description = "Status Completion: Project #{$task->project_id}, Task #{$task->id}, {$responsibleUser->name} (Commission)";
+                $this->createTransaction(
+                    $commissionAmount,
+                    Transaction::CREDIT,
+                    $responsiblePersonAccount->id,
+                    $responsibleUser->id,
+                    $newPersonBalance,
+                    substr($description, 0, 120),
+                    $transactionGroup->id
+                );
+                
+                // Update responsible person account balance
+                $responsiblePersonAccount->balance = $newPersonBalance;
+                $responsiblePersonAccount->save();
+            }
+            
+            // Mark task as completed
+            $task->is_completed = true;
+            $task->save();
+            
+            // Commit transaction
+            DB::commit();
+            
+            return true;
+            
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+            Log::error('Error processing task status completion accounting: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    /**
+     * Handle task status change from 'completed' to another status
+     * Reverses the financial transactions created during completion
+     *
+     * @param Task $task
+     * @return bool
+     */
+    public function reverseTaskCompletion(Task $task): bool
+    {
+        // Check if task has a price
+        if (!$task->price || $task->price <= 0) {
+            // Just mark as not completed without financial transactions
+            $task->is_completed = false;
+            $task->save();
+            return true;
+        }
+        
+        try {
+            // Begin transaction
+            DB::beginTransaction();
+            
+            // Find all transaction groups related to this task's completion
+            $transactionGroups = TransactionGroup::where('transactionable_id', $task->id)
+                ->where('transactionable_type', get_class($task))
+                ->where('name', 'like', 'Status Completion #%')
+                ->get();
+            
+            if ($transactionGroups->isEmpty()) {
+                // No transaction groups found, just update the task status
+                $task->is_completed = false;
+                $task->save();
+                DB::commit();
+                return true;
+            }
+            
+            // Create a new transaction group for the reversal
+            $reversalGroup = TransactionGroup::create([
+                'name' => "Status Reversal #{$task->id} - {$task->title}",
+                'description' => "Status Reversal Transactions for Task #{$task->id} in Project #{$task->project_id}",
+                'group_date' => now(),
+                'user_id' => $task->project->responsible_user_id,
+                'transactionable_id' => $task->id,
+                'transactionable_type' => get_class($task),
+            ]);
+            
+            // Process each transaction group
+            foreach ($transactionGroups as $group) {
+                $transactions = Transaction::where('transaction_group_id', $group->id)->get();
+                
+                foreach ($transactions as $transaction) {
+                    // Get the account
+                    $account = Account::find($transaction->account_id);
+                    
+                    if (!$account) {
+                        continue;
+                    }
+                    
+                    // Create a reversal transaction (opposite debit/credit)
+                    $oppositeType = $transaction->debit_credit === Transaction::DEBIT ? 
+                        Transaction::CREDIT : Transaction::DEBIT;
+                    
+                    // Calculate new balance
+                    $newBalance = $oppositeType === Transaction::DEBIT ?
+                        $account->balance + $transaction->amount :
+                        $account->balance - $transaction->amount;
+                    
+                    // Create reversal transaction
+                    $description = "Status Reversal: Project #{$task->project_id}, Task #{$task->id}, {$account->account_name}";
+                    $this->createTransaction(
+                        $transaction->amount,
+                        $oppositeType,
+                        $account->id,
+                        $transaction->user_id,
+                        $newBalance,
+                        substr($description, 0, 120),
+                        $reversalGroup->id
+                    );
+                    
+                    // Update account balance
+                    $account->balance = $newBalance;
+                    $account->save();
+                }
+            }
+            
+            // Mark task as not completed
+            $task->is_completed = false;
+            $task->save();
+            
+            // Commit transaction
+            DB::commit();
+            
+            return true;
+            
+        } catch (\Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+            Log::error('Error processing task status reversal accounting: ' . $e->getMessage());
             throw $e;
         }
     }

@@ -12,6 +12,34 @@ class TaskSummaryWidget extends BaseWidget
     protected static ?string $pollingInterval = null;
 
     public ?Model $record = null;
+    
+    protected function getPaymentStatusDescription($totalPaid, $paymentPercentage, $totalPrice): string
+    {
+        $paymentStatus = '';
+        
+        if ($this->record->isFullyPaid()) {
+            $paymentStatus = __('payments.project.payment_status.fully_paid');
+        } elseif ($totalPrice <= 0) {
+            $paymentStatus = __('payments.project.payment_status.no_price');
+        } else {
+            $paymentStatus = __('payments.project.payment_status.partially_paid', ['percentage' => $paymentPercentage]);
+        }
+        
+        return __('payments.project.payment_status.total_paid') . ': ' . 
+               number_format($totalPaid, 2) . ' ' . config('app.currency', 'TRY') . 
+               ' | ' . $paymentStatus . ' (' . $paymentPercentage . '%)';
+    }
+    
+    protected function getPaymentStatusColor(): string
+    {
+        if ($this->record->isFullyPaid()) {
+            return 'success';
+        } elseif ($this->record->getTotalPrice() <= 0) {
+            return 'warning';
+        } else {
+            return 'primary';
+        }
+    }
 
     protected function getStats(): array
     {
@@ -26,8 +54,12 @@ class TaskSummaryWidget extends BaseWidget
             ->pluck('count', 'status')
             ->toArray();
 
-        // Calculate financial summaries
-        $totalPrice = $this->record->tasks()->sum('price') ?? 0;
+        // Calculate financial summaries using the new Project model methods
+        $totalPrice = $this->record->getTotalPrice();
+        $totalPaid = $this->record->getTotalPaid();
+        $paymentPercentage = ($totalPrice > 0) ? round(($totalPaid / $totalPrice) * 100, 2) : 0;
+        
+        // Also keep the task-based financial data for reference
         $paidSum = $this->record->tasks()->where('is_paid', true)->sum('price') ?? 0;
         $getPaidSum = $this->record->tasks()->where('is_get_paid', true)->sum('price') ?? 0;
 
@@ -50,12 +82,10 @@ class TaskSummaryWidget extends BaseWidget
                 ->color('blue'),
 
             Stat::make(__('filament::resources.widgets.task_summary.financial_summary'), 
-                __('filament::resources.widgets.task_summary.total') . ': ₺' . number_format($totalPrice, 2))
-                ->description(
-                    __('filament::resources.widgets.task_summary.paid') . ': ₺' . number_format($paidSum, 2) . ' | ' .
-                    __('filament::resources.widgets.task_summary.get_paid') . ': ₺' . number_format($getPaidSum, 2)
-                )
-                ->color('success'),
+                __('payments.project.payment_status.total_price') . ': ' . number_format($totalPrice, 2) . ' ' . config('app.currency', 'TRY'))
+                ->description($this->getPaymentStatusDescription($totalPaid, $paymentPercentage, $totalPrice))
+                ->chart([$paymentPercentage, 100 - $paymentPercentage])
+                ->color($this->getPaymentStatusColor()),
         ];
     }
 }
