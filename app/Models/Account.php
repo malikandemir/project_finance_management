@@ -24,6 +24,7 @@ class Account extends Model implements Auditable
         'account_group_id',
         'account_uniform_id',
         'user_id',
+        'company_id',
     ];
     
     /**
